@@ -31,3 +31,16 @@ This avoids:
 ## Code
 
 The core logic is implemented in:
+dynamic_sparse_attention.py
+Example usage:
+
+```python
+from dynamic_sparse_attention import DynamicSparseAttention
+import torch
+
+q = torch.randn(1, 5, 16)
+k = torch.randn(1, 5, 16)
+v = torch.randn(1, 5, 16)
+
+attn = DynamicSparseAttention(dim=16)
+output, weights, tau = attn(q, k, v)
