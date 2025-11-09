@@ -39,6 +39,20 @@ from dynamic_sparse_attention import DynamicSparseAttention
 import torch
 
 q = torch.randn(1, 5, 16)
+## Visualization
+
+We compare attention behavior on unstructured vs structured inputs:
+
+| Input Type | τ (Temperature) | Attention Pattern |
+|-----------|----------------|------------------|
+| Unstructured / noisy | High τ | Broad exploration |
+| Structured / stable | Low τ | Focused exploitation |
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/zhuwendudu/Dynamic-sparse-attention/main/ASSETS/attention_compare.png" width="600">
+</p>
+
+To reproduce the visualization:
 k = torch.randn(1, 5, 16)
 v = torch.randn(1, 5, 16)
 
