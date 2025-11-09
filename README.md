@@ -50,3 +50,27 @@ This mechanism is useful for:
 ---
 
 ## Files
+dynamic_sparse_attention.py   # Core module (plug-and-play)
+demo.py                       # Minimal example
+results/                      # Visualizations & CSV logs (optional)
+## Usage Example
+
+```python
+from dynamic_sparse_attention import DynamicSparseAttention
+import torch
+
+q = torch.randn(1, 5, 16)
+k = torch.randn(1, 5, 16)
+v = torch.randn(1, 5, 16)
+
+attn = DynamicSparseAttention(dim=16)
+output, weights, tau = attn(q, k, v)
+
+print("Output:", output.shape)
+print("Attention weights:", weights)
+print("Dynamic tau:", tau)
+
+Conceptual Visualization
+High τ (broad, exploratory)
+        ↓ structure emerges
+Low τ (focused, selective)
