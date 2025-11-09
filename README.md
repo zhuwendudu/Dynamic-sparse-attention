@@ -58,3 +58,18 @@ v = torch.randn(1, 5, 16)
 
 attn = DynamicSparseAttention(dim=16)
 output, weights, tau = attn(q, k, v)
+## Visualization
+
+To illustrate how the dynamic sparse attention shifts between *exploration* and *exploitation*,  
+we compare the attention maps under two different input conditions:
+
+| Input Type | τ (Temperature) | Attention Behavior |
+|-----------|----------------|------------------|
+| **Unstructured / Noisy Features** | **High τ** | Broad, diffuse attention (exploration) |
+| **Structured / Clear Pattern** | **Low τ** | Sharp, selective attention (exploitation) |
+
+<p align="center">
+  <img src="ASSETS/attention_compare.png" width="650">
+</p>
+
+Run the visualization yourself:
