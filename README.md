@@ -1,4 +1,11 @@
 
-# Dynamic Sparse Attention (Demo)
+# Dynamic Sparse Attention (Minimal Demo)
 
-Minimal demo of complexity-conditioned dynamic temperature attention.
+This folder contains:
+- `dynamic_sparse_attention.py` - core module
+- `demo.py` - runnable minimal example
+
+Run demo:
+```
+python demo.py
+```
