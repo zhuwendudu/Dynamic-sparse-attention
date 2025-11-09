@@ -1,60 +1,52 @@
-# Dynamic Sparse Attention (Explore → Focus)
+# Dynamic Sparse Attention (Complexity-Conditioned Temperature)
 
-This repository implements a **complexity-conditioned dynamic temperature attention mechanism**.
+This repository provides a **dynamic temperature attention mechanism** that adapts the softmax temperature τ based on feature complexity.
 
-When the input is **ambiguous** (many competing features), the attention stays **broad** — this corresponds to **exploration**.  
-When a **dominant structure** emerges, the attention **sharpens** — this corresponds to **exploitation**.
+When representations are **ambiguous**, attention remains **broad** (exploration).  
+When a **dominant pattern emerges**, attention **sharpens** automatically (exploitation).
 
-This matches how humans think:
-
-> 先观察 → 看清状况 → 再集中注意力做决定
+This allows attention to **shift modes**:
+**explore → detect structure → focus**.
 
 ---
 
-## Key Idea
+## Core Mechanism
 
-We adjust the softmax temperature **τ** based on the *structural variance* of the attention logits.
+Standard attention:
 
-| Situation | τ Value | Attention Behavior |
+\[
+\text{softmax}(QK^\top / \tau)
+\]
+
+uses a **fixed τ**, forcing a single focus level.
+
+We compute τ dynamically:
+
+\[
+\tau = g(\mathrm{Var}(QK^\top))
+\]
+
+- **Low variance** → structure unclear → **τ increases** → broad attention  
+- **High variance** → structure clear → **τ decreases** → focused attention  
+
+This provides a **continuous, interpretable phase shift** in attention.
+
+---
+
+## Why This Matters
+
+| Situation | Fixed Attention | Dynamic Sparse Attention |
 |---|---|---|
-| Inputs unclear / noisy / many competing hypotheses | **High τ** | Broad exploration |
-| Clear dominant pattern emerges | **Low τ** | Focused exploitation |
+| Uncertain / noisy input | Over-focus too early | Maintains exploration |
+| Clear structure emerges | Remains diffuse | Automatically sharpens |
+| Robustness | Sensitive to scaling | Stable across conditions |
+| Agent / LLM reasoning | No mode shift | Supports search → commit dynamics |
 
-This avoids:
-
-- premature over-focusing
-- collapsing into incorrect local minima
-- losing flexibility too early
+This mechanism is useful for:
+- **Large Language Models**
+- **Vision transformers**
+- **Reinforcement-learning agents / planning models**
 
 ---
 
-## Code
-
-The core logic is implemented in:
-dynamic_sparse_attention.py
-Example usage:
-
-```python
-from dynamic_sparse_attention import DynamicSparseAttention
-import torch
-
-q = torch.randn(1, 5, 16)
-## Visualization
-
-We compare attention behavior on unstructured vs structured inputs:
-
-| Input Type | τ (Temperature) | Attention Pattern |
-|-----------|----------------|------------------|
-| Unstructured / noisy | High τ | Broad exploration |
-| Structured / stable | Low τ | Focused exploitation |
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/zhuwendudu/Dynamic-sparse-attention/main/ASSETS/attention_compare.png" width="600">
-</p>
-
-To reproduce the visualization:
-k = torch.randn(1, 5, 16)
-v = torch.randn(1, 5, 16)
-
-attn = DynamicSparseAttention(dim=16)
-output, weights, tau = attn(q, k, v)
+## Files
